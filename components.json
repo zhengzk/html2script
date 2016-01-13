@@ -1,0 +1,6 @@
+{
+  "utils":"base",
+  "translate":{
+    "factory":"base.CoreObject.extend"
+  }
+}

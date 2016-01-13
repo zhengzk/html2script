@@ -1,0 +1,40 @@
+{
+  "name": "html2script",
+  "version": "0.0.2",
+  "description": "0.0.2",
+  "main": "src/html2script.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "htmlparser2": "^3.9.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-htmlmin": "^1.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.1",
+    "streamqueue": "^1.1.1",
+    "through2": "^2.0.0"
+  },
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhengzk/html2script.git"
+  },
+  "keywords": [
+    "html",
+    "script",
+    "parse",
+    "gulp"
+  ],
+  "author": "zhengzk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhengzk/html2script/issues"
+  },
+  "homepage": "https://github.com/zhengzk/html2script#readme"
+}
