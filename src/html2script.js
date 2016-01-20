@@ -43,6 +43,20 @@ var tags = "a abbr address area article aside audio b base bdi bdo big blockquot
  *  }
  * ```
  */
+function trim(text) {
+    var reg = /(^\s*)|(\s*$)/g;
+    return text == null ?
+        '' :
+        ( text + '' ).replace(reg, '');
+}
+
+function toJSON(object){
+    var arr = [];
+    for(var o in object){
+        arr.push("\""+o+"\":\""+object[o]+"\"");
+    }
+    return "{"+arr.join(",")+"}";
+}
 
 var ScriptParser = function(data,options){
     if(!options.file){
@@ -123,7 +137,7 @@ ScriptParser.prototype = {
         }
         return str;
     },
-    getDataStr:function(data,root) {
+    getDataStr:function(data,root,varName) {
         var str = "";
         for (var i = 0, len = data.length; i < len; i++) {
             var d = data[i];
@@ -134,8 +148,30 @@ ScriptParser.prototype = {
                 case 'tag':
                     str += this.getTagStr(d,root,root + "_" + i);
                     break;
+                case 'text':
+                    if(trim(d.data)){
+                        str += varName ? varName : root + '.html("' + this.parseText(d.data) + '");';
+                        //console.log( varName ? varName : root + '.html(\"' + this.parseText(d.data) + '\");');
+                        console.log('1',str);
+                    }
+
+                    break;
             }
         }
+        return str;
+    },
+    parseText:function(str){
+        str = str.replace("\"","\\\"");
+        //str = str.replace(/{{[^({{||}})]{0,}}}/g,function(text,inx){
+        str = str.replace(/{{[\W\d\S\s]{0,}}}/g,function(text,inx){
+            var st = text.indexOf('{{');
+            var et = text.indexOf('}}');
+            return '"+ '+text.substring(st + 2, et) +'+ "';
+            //var str = text.substring(0, st);
+            //var etr = text.substring(et + 2);
+            //return ( str ? " + '" + str + "'" : "" ) + "'+"+text.substring(st + 2, et) +"+'" + (etr ? " + '" + etr + "'" : "");
+        });
+        console.log('2',str);
         return str;
     },
     getDirectiveStr:function(data,parent,varName){
@@ -164,12 +200,13 @@ ScriptParser.prototype = {
             if(key.indexOf('on') == 0 ){
                 events[key] = attribs[key];
             }else{
-                attrs[key] = attribs[key];
+                attrs[key] = (this.parseText(attribs[key]));
             }
         }
+        //console.log(attrs);
         var isDOM = tags.indexOf(data.name)>=0;
         if(isDOM){
-            str += 'var ' + varName + ' = ' + base + '.create("' + data.name + '",'+ JSON.stringify(attrs) +');';
+            str += 'var ' + varName + ' = ' + base + '.create("' + data.name + '",'+ toJSON(attrs) +');';
             str += this.getTagEventsStr(varName,events);
             if(data.children){
                 str += this.getDataStr(data.children,varName);
@@ -179,9 +216,10 @@ ScriptParser.prototype = {
                 attrs:attrs,
                 events:events
             };
-            str += 'var ' + varName + ' = new ' + this.parseObjectName(data.name) + "(" + JSON.stringify(options) + ");";
+            str += 'var ' + varName + ' = new ' + this.parseObjectName(data.name) + "(" + toJSON(options) + ");";
             var translate = this.options.translate;
             if(translate) {
+
                 if(parent != 'frag') {
                     str += parent + '.append(' + varName + '.fragment);';
                 }else{
