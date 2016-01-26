@@ -15,4 +15,4 @@ npm install html2script
 License
 -------
 
-The MIT License (MIT), read [LICENSE.md](./LICENSE.md) for more information
+The MIT License (MIT), read [LICENSE](./LICENSE) for more information

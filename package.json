@@ -1,6 +1,6 @@
 {
   "name": "html2script",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "0.0.2",
   "main": "src/html2script.js",
   "directories": {

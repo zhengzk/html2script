@@ -19,9 +19,9 @@ function addNote(data,options) {
     var version = options.version || pkg.version;
 
     return '/*!' + name + ' <' + version + '@' + timeStr + '> */\n'
-        +'(function(jQuery,undefined){\n'
+        +'(function(jQuery,exports,undefined){\n'
         + data
-        +'}(jQuery));';
+        +'}(jQuery,window));';
 }
 
 /**
